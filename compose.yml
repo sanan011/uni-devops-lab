@@ -1,0 +1,21 @@
+services:
+  portal:
+    image: ${IMAGE_NAME:-student-portal:1.0}
+    build: .
+    ports:
+      - "${PORTAL_PORT:-8080}:5000"
+    environment:
+      REDIS_HOST: redis
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  redis_data:
